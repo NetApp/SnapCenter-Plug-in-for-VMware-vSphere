@@ -38,7 +38,7 @@ ansible-galaxy collection install vmware.vmware_rest
 1. From the Ansible Control machine Download a ZIP version of this repository or clone it using the below command:
 	
 ```
-git clone https://github.com/NetApp-Automation/TBD.git
+git clone https://github.com/NetApp-Automation/SnapCenter-Plug-in-for-VMware-vSphere.git
 ```
 
 2. There is a variable file under the vars folder 'snapcenter_vmware_plugin_main.yml' for the setup of SnapCenter VMware Plugin, that need to be filled out with environment specific parameters prior to executing the playbook.
@@ -65,7 +65,7 @@ Example -
 
 	[vcenter]
 	# vCenter Management IP. List only one vCenter IP. This is used by the playbooks for Snapcenter VMware Plugin.
-	192.168.10.10
+	192.168.3.150
 
 5. Executing the Playbook
 
