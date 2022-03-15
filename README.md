@@ -2,7 +2,7 @@
  
 This repository contains Ansible roles and playbooks for an automated deployment of SnapCenter VMware Plugin.
 
-#### Note: Automated deployment of SnapCenter VMware Plugin requires minimum version of VMware vSphere 7.0 U2
+####  Note: Automated deployment of SnapCenter VMware Plugin requires minimum version of VMware vSphere 7.0 U2
 
 The SnapCenter VMware Plugin deployment is based on the following role:
 
