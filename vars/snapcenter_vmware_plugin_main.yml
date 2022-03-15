@@ -7,11 +7,11 @@ ontap_user: "admin"
 ontap_password: "password"
 ontap_platformtype: "AFF"
 
-#Path to OVF or OVA file to deploy.
+#Path to OVF or OVA file to deploy
 ova_path: "/tmp/scv-4.6-211222_0109.ova"
 
 #Name of the SnapCenter VMware Plugin VM to work with
-vm_name: "snapcenter_vm"
+vm_name: "snapcenter-vm"
 
 #Datacenter to deploy to
 datacenter: "Datacenter"
@@ -35,7 +35,7 @@ app_user_passwd: "password"
 app_user_name: "admin"
 
 #Specify the hostname for the SnapCenter VMware Plugin VM
-snapcenter_vmware_plugin_hostname: "snapcenter_plugin"
+snapcenter_vmware_plugin_hostname: "snapcenter-plugin"
 
 #IP address for the SnapCenter VMware Plugin VM
 snapcenter_vmware_plugin_ip: "192.168.20.25"
@@ -50,7 +50,7 @@ snapcenter_vmware_plugin_gateway: "192.168.20.1"
 ntp_server: "192.168.10.20"
 
 #DNS Server
-dns_server: "192.168.10.20"
+dns_server: "192.168.10.40"
 
 #DNS Domain Name
 dns_domain: "snapcenter.netapp.com"
