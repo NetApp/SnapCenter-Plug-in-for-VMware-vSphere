@@ -1,0 +1,117 @@
+---
+# Set the network name dictionary to be used to deploy SnapCenter VMware Plugin VM 
+- name: Set the network name dictionary
+  set_fact:
+    vm_network_dict: '{ "vm_network": "{{ vm_network }}" }'
+  tags:
+    - network_name
+
+# Deploy Snapcenter VMware Plugin VM using the OVA
+- name: Deploy Snapcenter VMware Plugin in vCenter
+  community.vmware.vmware_deploy_ovf:
+    hostname: '{{ inventory_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    ovf: '{{ ova_path }}'
+    name: '{{ vm_name }}'
+    datacenter: '{{ datacenter }}'
+    cluster: '{{ cluster }}'
+    datastore: '{{ datastore }}'
+    networks: '{{ vm_network_dict }}'
+    port: '{{ vm_port }}'
+    inject_ovf_env: true
+    fail_on_spec_warnings: false
+    power_on: true
+    wait_for_ip_address: false
+    validate_certs: false
+    properties:
+      vplatform.auth.passwd.Vendor_Provider_Appliance: '{{ app_user_passwd }}'
+      vplatform.auth.username.Vendor_Provider_Appliance: '{{ app_user_name }}'
+      vplatform.ipAddress.Vendor_Provider_Appliance: '{{ snapcenter_vmware_plugin_ip }}'
+      vplatform.hostName.Vendor_Provider_Appliance: '{{ snapcenter_vmware_plugin_hostname }}'
+      vplatform.netMask.Vendor_Provider_Appliance: '{{ snapcenter_vmware_plugin_netmask }}'
+      vplatform.gateway.Vendor_Provider_Appliance: '{{ snapcenter_vmware_plugin_gateway }}'
+      vplatform.primaryDNS.Vendor_Provider_Appliance: '{{ dns_server }}'
+      vplatform.searchDomains.Vendor_Provider_Appliance: '{{ dns_domain }}'
+      vplatform.vappliance.ntp.servers.Vendor_Provider_Appliance: '{{ ntp_server }}'
+      vplatform.vcenter.register.ipAddress.Vendor_Provider_Appliance: '{{ inventory_hostname }}'
+      vplatform.vcenter.register.passwd.Vendor_Provider_Appliance: '{{ vcenter_password }}'
+      vplatform.vcenter.register.port.Vendor_Provider_Appliance: '{{ vm_port }}'
+      vplatform.vcenter.register.username.Vendor_Provider_Appliance: '{{ vcenter_username }}'
+  register: instance
+  tags:
+    - snapcenter_vmware_plugin_setup
+
+# Connects and mounts VMware Tools installer as a CD-Rom to the SnapCenter VMware Plugin VM and starts auto installing VMware Tools. Installation will take several minutes and requires several restarts.
+- name: Connect the VMware Tools installation media to the VM and install VMware Tools
+  register: VMwareToolsConnectResults
+  vmware.vmware_rest.vcenter_vm_tools_installer:
+    session_timeout: 120
+    state: connect
+    vcenter_hostname: '{{ inventory_hostname }}'
+    vcenter_password: '{{ vcenter_password }}'
+    vcenter_username: '{{ vcenter_username }}'
+    vcenter_validate_certs: false
+    vm: '{{ instance.instance.moid }}'
+
+# VMware Tools installer is mounted and VMware tools installation started
+- debug:
+    msg: 
+      - "VMware Tools CD installer is mounted, installation is in progress."
+
+# Checking on the status of the availability of the SnapCenter VMware Plugin API periodically. Rest of the playbook depends on this API.
+- name: Waiting for VMware Tools installation to complete. It will take several minutes to complete and requires several restarts. Also pausing for Network and services to start
+  pause:
+    minutes: 7
+
+# Build request JSON to retrieve Snapcenter VMware Plugin API Session ID/Token
+- name: Build JSON for Snapcenter VMware Plugin Session ID
+  set_fact:
+    tokenrequest_body: '{ "password": "{{ vcenter_password }}",
+                          "username": "{{ vcenter_username }}" }'
+  tags:
+    - session_json
+
+# Generate Session ID/token from Snapcenter VMware Plugin API
+- name: Generate a Session ID for Snapcenter VMware Plugin with vCenter
+  uri:
+    url: "https://{{ snapcenter_vmware_plugin_ip }}:8144/api/4.1/auth/login"
+    validate_certs: false
+    method: POST
+    return_content: yes
+    body_format: json
+    body: "{{ tokenrequest_body }}"
+  register: login
+  tags:
+    - session_id
+
+# Print Session ID/token
+- debug:
+    msg: "SnapCenter VMware Plugin API Session Token: {{ login.json.response.token }}"
+
+# Build JSON to add ONTAP Cluster to Snapcenter VMware Plugin
+- name: Build JSON to add ONTAP Cluster to Snapcenter VMware Plugin
+  set_fact:
+    ontap_register_body: '{ "asup": false ,
+                        "name": "{{ ontap_cluster }}" ,
+                        "password": "{{ ontap_password }}" ,
+                        "platformType": "{{ ontap_platformtype }}" ,
+                        "port": 443 ,
+                        "preferredIp": "" ,
+                        "protocol": "HTTPS" ,
+                        "syslog": true ,
+                        "timeout": 120 ,
+                        "userName": "{{ ontap_user }}" }'
+
+# Add ONTAP Cluster to the Snapcenter VMware Plugin via the API
+- name: Add ONTAP Cluster to Snapcenter VMware Plugin
+  uri:
+    url: "https://{{ snapcenter_vmware_plugin_ip }}:8144/api/4.1/storage-system"
+    validate_certs: false
+    method: POST
+    return_content: yes
+    body_format: json
+    body: "{{ ontap_register_body }}"
+    headers:
+      Accept: "application/json" 
+      Token: "{{ login.json.response.token }}"
