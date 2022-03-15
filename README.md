@@ -77,5 +77,4 @@ Execute the playbook from the Ansible Control machine as an admin/ root user usi
 
 ### Authors
 
- * Jayakishore Esanakula (kishore.esanakula@netapp.com)
-
+ * Kamini Singh (kamini.singh@netapp.com) 
