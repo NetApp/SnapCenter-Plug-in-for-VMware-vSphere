@@ -1,0 +1,56 @@
+---
+# Edit the following variables as necessary according to your environment
+
+# ONTAP Cluster to integrate with SnapCenter VMware Plugin 
+ontap_cluster: "192.168.20.9"
+ontap_user: "admin"
+ontap_password: "password"
+ontap_platformtype: "AFF"
+
+#Path to OVF or OVA file to deploy.
+ova_path: "/tmp/scv-4.6-211222_0109.ova"
+
+#Name of the SnapCenter VMware Plugin VM to work with
+vm_name: "snapcenter_vm"
+
+#Datacenter to deploy to
+datacenter: "Datacenter"
+
+#Cluster to deploy to
+cluster: "Cluster"
+
+#Datastore to deploy to
+datastore: "Datastore"
+
+#The VM Network available in VMware vCenter that should be used by SnapCenter VMware Plugin
+vm_network: "sample_name"
+
+#The port number of the vSphere vCenter or ESXi server (Default value is 443)
+vm_port: "443"
+
+#Application User Password
+app_user_passwd: "password"
+
+#Application User name
+app_user_name: "admin"
+
+#Specify the hostname for the SnapCenter VMware Plugin VM
+snapcenter_vmware_plugin_hostname: "snapcenter_plugin"
+
+#IP address for the SnapCenter VMware Plugin VM
+snapcenter_vmware_plugin_ip: "192.168.20.25"
+
+#Subnet to use on the deployed network
+snapcenter_vmware_plugin_netmask: "255.255.255.0"
+
+#Gateway on the deployed network
+snapcenter_vmware_plugin_gateway: "192.168.20.1"
+
+#NTP Server
+ntp_server: "192.168.10.20"
+
+#DNS Server
+dns_server: "192.168.10.20"
+
+#DNS Domain Name
+dns_domain: "snapcenter.netapp.com"
