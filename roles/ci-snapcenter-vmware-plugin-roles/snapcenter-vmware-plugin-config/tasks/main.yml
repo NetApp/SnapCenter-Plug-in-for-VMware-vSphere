@@ -59,7 +59,7 @@
     msg: 
       - "VMware Tools CD installer is mounted, installation is in progress."
 
-# Checking on the status of the availability of the SnapCenter VMware Plugin API periodically. Rest of the playbook depends on this API.
+# Waiting for VMware Tools installation to complete. Pausing for Network and services to start as well
 - name: Waiting for VMware Tools installation to complete. It will take several minutes to complete and requires several restarts. Also pausing for Network and services to start
   pause:
     minutes: 7
