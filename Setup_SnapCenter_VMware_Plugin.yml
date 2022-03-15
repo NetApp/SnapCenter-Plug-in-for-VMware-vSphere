@@ -1,0 +1,14 @@
+---
+- name: Configure SnapCenter VMware Plugin
+  collections:
+    - community.vmware.vmware_deploy_ovf
+    - vmware.vmware_rest.vcenter_vm_tools_installer
+  hosts: vcenter
+  gather_facts: False
+  vars_files:
+    - vars/snapcenter_vmware_plugin_main.yml
+  connection: local
+  roles:
+  - { role: ci-snapcenter-vmware-plugin-roles/snapcenter-vmware-plugin-config, tags: [ 'snapcenter-vmware-plugin-config' ] }
+  tags:
+  - snapcenter_vmware_plugin_config
