@@ -2,7 +2,7 @@
 # Set the network name dictionary to be used to deploy SnapCenter VMware Plugin VM 
 - name: Set the network name dictionary
   set_fact:
-    vm_network_dict: '{ "vm_network": "{{ vm_network }}" }'
+    vm_network_dict: '{ "nat": "{{ vm_network }}" }'
   tags:
     - network_name
 
