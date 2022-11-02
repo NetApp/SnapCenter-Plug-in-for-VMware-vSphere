@@ -27,6 +27,7 @@
     properties:
       vplatform.auth.passwd.Vendor_Provider_Appliance: '{{ app_user_passwd }}'
       vplatform.auth.username.Vendor_Provider_Appliance: '{{ app_user_name }}'
+      vplatform.maint.passwd.Vendor_Provider_Appliance: '{{ maint_user_passwd }}'
       vplatform.ipAddress.Vendor_Provider_Appliance: '{{ snapcenter_vmware_plugin_ip }}'
       vplatform.hostName.Vendor_Provider_Appliance: '{{ snapcenter_vmware_plugin_hostname }}'
       vplatform.netMask.Vendor_Provider_Appliance: '{{ snapcenter_vmware_plugin_netmask }}'
