@@ -34,6 +34,9 @@ app_user_passwd: "password"
 #Application User name
 app_user_name: "admin"
 
+#Maintenance User Password
+maint_user_passwd: "password"
+
 #Specify the hostname for the SnapCenter VMware Plugin VM
 snapcenter_vmware_plugin_hostname: "snapcenter-plugin"
 
