@@ -8,7 +8,7 @@ ontap_password: "password"
 ontap_platformtype: "AFF"
 
 #Path to OVF or OVA file to deploy
-ova_path: "/tmp/scv-4.6-211222_0109.ova"
+ova_path: "/home/admin/Downloads/scv-4.6-211222_0109.ova"
 
 #Name of the SnapCenter VMware Plugin VM to work with
 vm_name: "snapcenter-vm"
