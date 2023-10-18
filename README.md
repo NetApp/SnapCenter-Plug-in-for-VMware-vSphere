@@ -1,4 +1,4 @@
-### Automated deployment of SnapCenter VMware Plugin using Ansible
+### Automated deployment of SnapCenter Plug-in for VMware vSphere using Ansible
  
 This repository contains Ansible roles and playbooks for an automated deployment of SnapCenter VMware Plugin.
 
@@ -12,8 +12,8 @@ The SnapCenter VMware Plugin deployment is based on the following role:
 
 The automation has been tested with the below versions of software:
 
-	Storage Operating System: ONTAP 9.8 and 9.9
-	VMware vSphere: 7.0.2 U2
+	Storage Operating System: ONTAP 9.11.1, 9.12.1, and 9.13.1
+	VMware vSphere: 7.0 U2, 7.0 U3, and 8.0
 
 ### Prerequisites
 
@@ -29,7 +29,7 @@ pip3 install pyvmomi
 ansible-galaxy collection install community.vmware
 pip3 install --upgrade git+https://github.com/vmware/vsphere-automation-sdk-python.git
 pip3 install -r ~/.ansible/collections/ansible_collections/community/vmware/requirements.txt
-pip install aiohttp
+pip3 install aiohttp
 ansible-galaxy collection install vmware.vmware_rest
 ```
 
@@ -38,7 +38,7 @@ ansible-galaxy collection install vmware.vmware_rest
 1. From the Ansible Control machine Download a ZIP version of this repository or clone it using the below command:
 	
 ```
-git clone https://github.com/NetApp-Automation/SnapCenter-Plug-in-for-VMware-vSphere.git
+git clone https://github.com/NetApp/SnapCenter-Plug-in-for-VMware-vSphere.git
 ```
 
 2. There is a variable file under the vars folder 'snapcenter_vmware_plugin_main.yml' for the setup of SnapCenter VMware Plugin, that need to be filled out with environment specific parameters prior to executing the playbook.
