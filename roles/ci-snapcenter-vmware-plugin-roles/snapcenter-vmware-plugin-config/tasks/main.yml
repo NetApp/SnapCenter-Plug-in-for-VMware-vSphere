@@ -1,10 +1,10 @@
 ---
 # Set the network name dictionary to be used to deploy SnapCenter VMware Plugin VM 
 - name: Set the network name dictionary
-  set_fact:
+  ansible.builtin.set_fact:
     vm_network_dict: '{ "nat": "{{ vm_network }}" }'
   tags:
-    - network_name
+    - snapcenter_vmware_plugin_setup
 
 # Deploy Snapcenter VMware Plugin VM using the OVA
 - name: Deploy Snapcenter VMware Plugin in vCenter
@@ -54,28 +54,34 @@
     vcenter_username: '{{ vcenter_username }}'
     vcenter_validate_certs: false
     vm: '{{ instance.instance.moid }}'
+  tags:
+    - snapcenter_vmware_plugin_setup
 
 # VMware Tools installer is mounted and VMware tools installation started
-- debug:
+- ansible.builtin.debug:
     msg: 
       - "VMware Tools CD installer is mounted, installation is in progress."
+  tags:
+    - snapcenter_vmware_plugin_setup
 
 # Waiting for VMware Tools installation to complete. Pausing for Network and services to start as well
 - name: Waiting for VMware Tools installation to complete. It will take several minutes to complete and requires several restarts. Also pausing for Network and services to start
-  pause:
+  ansible.builtin.pause:
     minutes: 7
+  tags:
+    - snapcenter_vmware_plugin_setup
 
 # Build request JSON to retrieve Snapcenter VMware Plugin API Session ID/Token
 - name: Build JSON for Snapcenter VMware Plugin Session ID
-  set_fact:
+  ansible.builtin.set_fact:
     tokenrequest_body: '{ "password": "{{ vcenter_password }}",
                           "username": "{{ vcenter_username }}" }'
   tags:
-    - session_json
+    - ontap_cluster_add
 
 # Generate Session ID/token from Snapcenter VMware Plugin API
 - name: Generate a Session ID for Snapcenter VMware Plugin with vCenter
-  uri:
+  ansible.builtin.uri:
     url: "https://{{ snapcenter_vmware_plugin_ip }}:8144/api/4.1/auth/login"
     validate_certs: false
     method: POST
@@ -84,15 +90,17 @@
     body: "{{ tokenrequest_body }}"
   register: login
   tags:
-    - session_id
+    - ontap_cluster_add
 
 # Print Session ID/token
-- debug:
+- ansible.builtin.debug:
     msg: "SnapCenter VMware Plugin API Session Token: {{ login.json.response.token }}"
+  tags:
+    - ontap_cluster_add
 
 # Build JSON to add ONTAP Cluster to Snapcenter VMware Plugin
 - name: Build JSON to add ONTAP Cluster to Snapcenter VMware Plugin
-  set_fact:
+  ansible.builtin.set_fact:
     ontap_register_body: '{ "asup": false ,
                         "name": "{{ ontap_cluster }}" ,
                         "password": "{{ ontap_password }}" ,
@@ -103,10 +111,12 @@
                         "syslog": true ,
                         "timeout": 120 ,
                         "userName": "{{ ontap_user }}" }'
+  tags:
+    - ontap_cluster_add
 
 # Add ONTAP Cluster to the Snapcenter VMware Plugin via the API
 - name: Add ONTAP Cluster to Snapcenter VMware Plugin
-  uri:
+  ansible.builtin.uri:
     url: "https://{{ snapcenter_vmware_plugin_ip }}:8144/api/4.1/storage-system"
     validate_certs: false
     method: POST
@@ -116,3 +126,5 @@
     headers:
       Accept: "application/json" 
       Token: "{{ login.json.response.token }}"
+  tags:
+    - ontap_cluster_add
